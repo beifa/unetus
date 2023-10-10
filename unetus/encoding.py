@@ -38,11 +38,9 @@ class Encoder(nn.Module):
                 f"Depth model not correct reduce size depth, current value: {len(self.blocks)}"  # noqa 501
             )
         skip_connections = []
-        print('start', x.shape)
         for encoding_block in self.blocks:
             x, skip_connnection = encoding_block(x)
             skip_connections.append(skip_connnection)
-            print(x.shape)
         return x, skip_connections
 
     @property
