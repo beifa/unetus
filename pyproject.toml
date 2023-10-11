@@ -1,0 +1,33 @@
+[project]
+name = "unetus"
+version = "0.0.2"
+authors = [
+  { name="beifa", email="beifabeifa@mail.ru" },
+]
+description = "The 3D version was described in Çiçek et al. 2016, 3D U-Net: Learning Dense Volumetric Segmentation from Sparse Annotation."
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+# Optional
+# This field adds keywords for your project which will appear on the
+# project page. What does your project relate to?
+#
+# Note that this is a list of additional keywords, separated
+# by commas, to be used to assist searching for the distribution in a
+# larger catalog.
+keywords = ["unet", "unet3d", "convolutional-neural-networks"]  # Optional
+dependencies = [ 
+    'torch'
+]
+[project.urls]
+"Homepage" = "https://github.com/beifa/unetus"
+"Bug Tracker" = "https://github.com/beifa/unetus/issues"
+[build-system]
+# These are the assumed default build requirements from pip:
+# https://pip.pypa.io/en/stable/reference/pip/#pep-517-and-518-support
+requires = ["setuptools>=43.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
