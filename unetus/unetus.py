@@ -12,15 +12,16 @@ class Unet3D(nn.Module):
     out_chanels: num labels
     num_block: count encoder & decoder block (depth model)
     """
+
     def __init__(
         self,
         in_chanels: int = 1,
         labels: int = 1,
         out_channels_first: int = 8,
         num_block: int = 3,
-        pool: str = 'Max',
-        activation: str = 'ReLU',
-        normolization: str = 'BatchNorm3d'
+        pool="Max",
+        activation: str = "ReLU",
+        normolization: str = "BatchNorm3d",
     ):
         super().__init__()
         self.encoder = Encoder(
@@ -29,7 +30,7 @@ class Unet3D(nn.Module):
             num_block=num_block,
             pool=pool,
             activation=activation,
-            normolization=normolization
+            normolization=normolization,
         )
         in_chanels = self.encoder.out_channels
         self.decoder = Decoder(
@@ -37,22 +38,22 @@ class Unet3D(nn.Module):
             num_block=num_block,
             pool=None,
             activation=activation,
-            normolization=normolization
+            normolization=normolization,
         )
         self.bottom = convBlock(
-                in_chanels,
-                in_chanels*2,
-                pool=None,
-                activation=activation,
-                normolization=normolization
+            in_chanels,
+            in_chanels * 2,
+            pool=None,
+            activation=activation,
+            normolization=normolization,
         )
         in_chanels_decoder = self.decoder.out_channels
         self.final_layer = nn.Conv3d(in_chanels_decoder, labels, 1)
 
     def forward(self, x):
-        print('encoder')
+        print("encoder")
         out, connections = self.encoder(x)
         out = self.bottom(out)
-        print('decoder')
+        print("decoder")
         out = self.decoder(out, connections)
         return self.final_layer(out)
