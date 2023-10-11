@@ -10,9 +10,10 @@ Installation
 
 ToDO:
 - [ ] ci&cd
-- [ ] tox
+- [x] tox
 - [ ] travis
-- [ ] pypi
+- [X] mypy
+- [x] pypi
 - [ ] residual block
 - [ ] dropout
 - [ ] ConvTranspose
