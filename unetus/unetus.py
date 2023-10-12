@@ -57,9 +57,7 @@ class Unet3D(nn.Module):
         self.final_layer = nn.Conv3d(in_chanels_decoder, labels, 1)
 
     def forward(self, x):
-        print("encoder")
         out, connections = self.encoder(x)
         out, _ = self.bottom(out)
-        print("decoder")
         out = self.decoder(out, connections)
         return self.final_layer(out)
