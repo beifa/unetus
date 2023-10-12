@@ -9,12 +9,11 @@ Installation
 ---
 
 ToDO:
-- [ ] ci&cd
-- [x] tox
-- [ ] travis
+- [X] ci&cd
+- [X] tox
 - [X] mypy
-- [x] pypi
-- [ ] residual block
+- [X] pypi
+- [X] residual block
 - [ ] dropout
-- [ ] ConvTranspose
+- [X] ConvTranspose
 - [ ] crop connection
