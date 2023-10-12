@@ -27,6 +27,14 @@ def test_dim_Unet3D():
     assert all(torch.tensor(out.shape) == torch.tensor([1, 1, 32, 32, 32]))
 
 
+def test_dim_transpose_sample_Unet3D():
+    r""" test case """
+    x = torch.randn(1, 1, 32, 32, 32)
+    model = Unet3D(labels=1, unsample_type='transpose')
+    out = model(x)
+    assert all(torch.tensor(out.shape) == torch.tensor([1, 1, 32, 32, 32]))
+
+
 def test_loss_Unet3D():
     r""" test case """
     x = torch.randn(1, 1, 32, 32, 32)
