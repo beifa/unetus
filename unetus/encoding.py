@@ -9,6 +9,7 @@ class Encoder(nn.Module):
         in_chanels: int = 1,
         out_channels_first: int = 8,
         num_block: int = 3,
+        residual: bool = False,
         pool="Max",
         activation: str = "ReLU",
         normolization: str = "BatchNorm3d",
@@ -19,6 +20,7 @@ class Encoder(nn.Module):
             self.convblock = convBlock(
                 in_chanels,
                 out_channels_first,
+                residual=residual,
                 pool=pool,
                 activation=activation,
                 normolization=normolization,

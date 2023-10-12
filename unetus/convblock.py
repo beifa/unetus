@@ -6,11 +6,13 @@ class convBlock(nn.Module):
         self,
         in_chanels: int,
         out_chanels: int,
+        residual: bool,
         pool,
         activation: str,
         normolization: str,
     ):
         super().__init__()
+        self.residual = residual
         # pool
         if pool:
             try:
@@ -35,12 +37,21 @@ class convBlock(nn.Module):
             self.normolization(out_chanels),
             self.activation,
         )
+        self.residual_block = nn.Conv3d(
+            in_chanels, out_chanels, kernel_size=1, padding=0
+        )
 
     def forward(self, x):
+        to_connect = []
+        if self.residual:
+            conv_residual = self.residual_block(x)
         if not self.pool:
-            return self.block(x)
-        to_connect = self.block(x)
-        out = self.pool(to_connect)
+            out = self.block(x)
+        else:
+            conv_residual = 0
+            to_connect = self.block(x)
+            out = self.pool(to_connect)
+        out = out if not self.residual else out + conv_residual
         return out, to_connect
 
     @property
