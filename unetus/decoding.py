@@ -8,6 +8,7 @@ class Decoder(nn.Module):
         self,
         in_chanels: int,
         num_block: int,
+        residual: bool,
         pool,
         activation: str,
         normolization: str,
@@ -21,6 +22,7 @@ class Decoder(nn.Module):
             self.convblock = convBlock(
                 in_chanels=in_chanels * 3,
                 out_chanels=in_chanels,
+                residual=residual,
                 pool=pool,
                 activation=activation,
                 normolization=normolization,

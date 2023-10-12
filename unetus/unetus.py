@@ -19,6 +19,7 @@ class Unet3D(nn.Module):
         labels: int = 1,
         out_channels_first: int = 8,
         num_block: int = 3,
+        residual: bool = False,
         pool="Max",
         activation: str = "ReLU",
         normolization: str = "BatchNorm3d",
@@ -28,6 +29,7 @@ class Unet3D(nn.Module):
             in_chanels=in_chanels,
             out_channels_first=out_channels_first,
             num_block=num_block,
+            residual=residual,
             pool=pool,
             activation=activation,
             normolization=normolization,
@@ -36,6 +38,7 @@ class Unet3D(nn.Module):
         self.decoder = Decoder(
             in_chanels=in_chanels,
             num_block=num_block,
+            residual=residual,
             pool=None,
             activation=activation,
             normolization=normolization,
@@ -43,6 +46,7 @@ class Unet3D(nn.Module):
         self.bottom = convBlock(
             in_chanels,
             in_chanels * 2,
+            residual=residual,
             pool=None,
             activation=activation,
             normolization=normolization,
