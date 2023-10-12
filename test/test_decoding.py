@@ -106,7 +106,9 @@ def test_decoder_1():
         torch.empty(1, 32, 16, 16, 16),
     ]
     in_chanels = x.shape[1]
-    decoder = decoding(in_chanels, len(connect), False, unsample_type='conv', pool=None)
+    decoder = decoding(
+        in_chanels, len(connect), False, unsample_type='conv', pool=None
+    )
     x, _ = cblock(x, in_chanels, in_chanels * 2, False, pool=None)
     x = decoder(x, connect)
     assert x.shape.numel() == decoder.out_channels * (x.shape[-1] ** 3)
@@ -122,7 +124,9 @@ def test_decoder_2():
         torch.empty(1, 64, 8, 8, 8),
     ]
     in_chanels = x.shape[1]
-    decoder = decoding(in_chanels, len(connect), False, unsample_type='conv', pool=None)
+    decoder = decoding(
+        in_chanels, len(connect), False, unsample_type='conv', pool=None
+    )
     x, _ = cblock(x, in_chanels, in_chanels * 2, False, pool=None)
     x = decoder(x, connect)
     assert x.shape.numel() == decoder.out_channels * (x.shape[-1] ** 3)
@@ -138,7 +142,9 @@ def test_decoder_3():
         torch.empty(1, 256, 8, 8, 8),
     ]
     in_chanels = x.shape[1]
-    decoder = decoding(in_chanels, len(connect), False, unsample_type='conv', pool=None)
+    decoder = decoding(
+        in_chanels, len(connect), False, unsample_type='conv', pool=None
+    )
     x, _ = cblock(x, in_chanels, in_chanels * 2, False, pool=None)
     x = decoder(x, connect)
     assert x.shape.numel() == decoder.out_channels * (x.shape[-1] ** 3)
@@ -153,7 +159,9 @@ def test_decoder_out_channels():
         torch.empty(1, 32, 16, 16, 16),
     ]
     in_chanels = x.shape[1]
-    decoder = decoding(in_chanels, len(connect), False, unsample_type='conv', pool=None)
+    decoder = decoding(
+        in_chanels, len(connect), False, unsample_type='conv', pool=None
+    )
     assert decoder.out_channels == 8
 
 
@@ -166,7 +174,9 @@ def test_decoder_residual():
         torch.empty(1, 32, 16, 16, 16),
     ]
     in_chanels = x.shape[1]
-    decoder = decoding(in_chanels, len(connect), True, unsample_type='conv', pool=None)
+    decoder = decoding(
+        in_chanels, len(connect), True, unsample_type='conv', pool=None
+    )
     assert decoder.out_channels == 8
 
 
@@ -180,7 +190,9 @@ def test_decoder_residual_3():
         torch.empty(1, 256, 8, 8, 8),
     ]
     in_chanels = x.shape[1]
-    decoder = decoding(in_chanels, len(connect), True, unsample_type='conv', pool=None)
+    decoder = decoding(
+        in_chanels, len(connect), True, unsample_type='conv', pool=None
+    )
     x, _ = cblock(x, in_chanels, in_chanels * 2, True, pool=None)
     x = decoder(x, connect)
     assert x.shape.numel() == decoder.out_channels * (x.shape[-1] ** 3)
