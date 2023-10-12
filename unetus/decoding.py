@@ -36,7 +36,7 @@ class Decoder(nn.Module):
         ):  # noqa 501
             x = self.unsample(x)
             x = torch.concat((skip_connection, x), axis=1)
-            x = encoding_block(x)
+            x, _ = encoding_block(x)
         return x
 
     @property

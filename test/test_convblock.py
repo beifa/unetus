@@ -14,6 +14,7 @@ def cblock(x: list, out_chanels: int) -> list:
     block = convBlock(
         in_chanels=1,
         out_chanels=out_chanels,
+        residual=False,
         pool="Max",
         activation="ReLU",
         normolization="BatchNorm3d",
@@ -24,11 +25,14 @@ def cblock(x: list, out_chanels: int) -> list:
 def inside_block(
     in_chanels: int,
     out_chanels: int,
+    residual: bool,
     pool: str,
     activation: str,
     normolization: str
 ):
-    return convBlock(in_chanels, out_chanels, pool, activation, normolization)
+    return convBlock(
+        in_chanels, out_chanels, residual, pool, activation, normolization
+    )
 
 
 def test_block_12():
@@ -49,35 +53,52 @@ def test_block_32():
 
 def test_out_channels():
     r""" test case """
-    block = inside_block(1, 12, "Max", "ReLU", "BatchNorm3d")
+    block = inside_block(1, 12, False, "Max", "ReLU", "BatchNorm3d")
     assert block.out_channels == 12
 
 
 def test_pool():
     r""" test case """
-    block_max = inside_block(1, 12, "Max", "ReLU", "BatchNorm3d")
-    block_avg = inside_block(1, 12, "Avg", "ReLU", "BatchNorm3d")
+    block_max = inside_block(1, 12, False, "Max", "ReLU", "BatchNorm3d")
+    block_avg = inside_block(1, 12, False, "Avg", "ReLU", "BatchNorm3d")
     assert isinstance(block_max.pool, MaxPool3d)
     assert isinstance(block_avg.pool, AvgPool3d)
 
 
 def test_activation():
     r""" test case """
-    block_ReLU = inside_block(1, 12, "Max", "ReLU", "BatchNorm3d")
-    block_PReLU = inside_block(1, 12, "Max", "PReLU", "BatchNorm3d")
+    block_ReLU = inside_block(1, 12, False, "Max", "ReLU", "BatchNorm3d")
+    block_PReLU = inside_block(1, 12, False, "Max", "PReLU", "BatchNorm3d")
     assert isinstance(block_PReLU.activation, PReLU)
     assert isinstance(block_ReLU.activation, ReLU)
 
 
 def test_normolization():
     r""" test case """
-    block_batch = inside_block(1, 12, "Max", "ReLU", "BatchNorm3d")
-    block_inst = inside_block(1, 12, "Max", "PReLU", "InstanceNorm3d")
+    block_batch = inside_block(1, 12, False, "Max", "ReLU", "BatchNorm3d")
+    block_inst = inside_block(1, 12, False, "Max", "PReLU", "InstanceNorm3d")
     assert isinstance(block_batch.block[1], BatchNorm3d)
     assert isinstance(block_inst.block[1], InstanceNorm3d)
 
 
 def test_cout_block():
     r""" test case """
-    block = inside_block(1, 12, "Max", "ReLU", "BatchNorm3d")
+    block = inside_block(1, 12, False, "Max", "ReLU", "BatchNorm3d")
     assert len(block.block) == 6
+
+
+def test_risidual_block():
+    r""" test case """
+    block = convBlock(
+        in_chanels=1,
+        out_chanels=8,
+        residual=True,
+        pool="Max",
+        activation="ReLU",
+        normolization="BatchNorm3d",
+    )
+    x = torch.empty(1, 1, 64, 64, 64)
+    result, _ = block(x)
+    print(result.shape)
+    assert torch.is_tensor(result)
+    assert result.shape.numel() == 8 * 32 * 32 * 32

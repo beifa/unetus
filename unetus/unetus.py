@@ -57,7 +57,7 @@ class Unet3D(nn.Module):
     def forward(self, x):
         print("encoder")
         out, connections = self.encoder(x)
-        out = self.bottom(out)
+        out, _ = self.bottom(out)
         print("decoder")
         out = self.decoder(out, connections)
         return self.final_layer(out)
