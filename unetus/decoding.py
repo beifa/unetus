@@ -45,23 +45,18 @@ class Decoder(nn.Module):
         ):
             xori = x.clone()
             if self.crop_conn:
-                print('crop_conn, crop')
                 skip_connection = self.crop_connection(x, skip_connection)
             if not self.unsample_type == 'transpose':
                 x = self.unsample(x)
             else:
                 x = self.ct_blocks[idx](x)
-            print(x.shape, skip_connection.shape)
             x = torch.concat(
                 (skip_connection, x if not self.crop_conn else xori),
                 axis=1
             )
             if self.crop_conn:
-                print('crop_conn uns')
-                print(x.shape, skip_connection.shape, 'afte conv')
                 x = self.unsample(x)
             x, _ = encoding_block(x)
-            print(x.shape, skip_connection.shape, 'afte conv')
         return x
 
     def crop_connection(self, x, connection):
