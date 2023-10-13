@@ -29,6 +29,7 @@ def decoding(
     num_block: int,
     residual: bool,
     unsample_type: str,
+    crop_conn: bool,
     pool
 ):
     decoder = Decoder(
@@ -36,6 +37,7 @@ def decoding(
         num_block=num_block,
         residual=residual,
         unsample_type=unsample_type,
+        crop_conn=crop_conn,
         pool=pool,
         activation=ACTIVATION,
         normolization=NORMALIZATION,
@@ -73,7 +75,7 @@ def test_overall_decoder():
     out, _ = cblock(out, in_chanels, in_chanels * 2, residual, pool=None)
     assert out.shape.numel() == 64 * 8 * 8 * 8
     decoder = decoding(
-        in_chanels, len(connect), residual, unsample_type='conv', pool=None  # noqa 501
+        in_chanels, len(connect), residual, 'conv', crop_conn=False, pool=None  # noqa 501
     )
     x = decoder(out, connect)
     assert x.shape.numel() == out_channels_first * (x.shape[-1] ** 3)
@@ -91,7 +93,7 @@ def test_overall_decoder_transpose():
     out, _ = cblock(out, in_chanels, in_chanels * 2, residual, pool=None)
     assert out.shape.numel() == 64 * 8 * 8 * 8
     decoder = decoding(
-        in_chanels, len(connect), residual, unsample_type='transpose', pool=None  # noqa 501
+        in_chanels, len(connect), residual, 'transpose', crop_conn=False, pool=None  # noqa 501
     )
     x = decoder(out, connect)
     assert x.shape.numel() == out_channels_first * (x.shape[-1] ** 3)
@@ -107,7 +109,7 @@ def test_decoder_1():
     ]
     in_chanels = x.shape[1]
     decoder = decoding(
-        in_chanels, len(connect), False, unsample_type='conv', pool=None
+        in_chanels, len(connect), False, 'conv', crop_conn=False, pool=None
     )
     x, _ = cblock(x, in_chanels, in_chanels * 2, False, pool=None)
     x = decoder(x, connect)
@@ -125,7 +127,7 @@ def test_decoder_2():
     ]
     in_chanels = x.shape[1]
     decoder = decoding(
-        in_chanels, len(connect), False, unsample_type='conv', pool=None
+        in_chanels, len(connect), False, 'conv', crop_conn=False, pool=None
     )
     x, _ = cblock(x, in_chanels, in_chanels * 2, False, pool=None)
     x = decoder(x, connect)
@@ -143,7 +145,7 @@ def test_decoder_3():
     ]
     in_chanels = x.shape[1]
     decoder = decoding(
-        in_chanels, len(connect), False, unsample_type='conv', pool=None
+        in_chanels, len(connect), False, 'conv', crop_conn=False, pool=None
     )
     x, _ = cblock(x, in_chanels, in_chanels * 2, False, pool=None)
     x = decoder(x, connect)
@@ -160,7 +162,7 @@ def test_decoder_out_channels():
     ]
     in_chanels = x.shape[1]
     decoder = decoding(
-        in_chanels, len(connect), False, unsample_type='conv', pool=None
+        in_chanels, len(connect), False, 'conv', crop_conn=False, pool=None
     )
     assert decoder.out_channels == 8
 
@@ -175,7 +177,7 @@ def test_decoder_residual():
     ]
     in_chanels = x.shape[1]
     decoder = decoding(
-        in_chanels, len(connect), True, unsample_type='conv', pool=None
+        in_chanels, len(connect), True, 'conv', crop_conn=False, pool=None
     )
     assert decoder.out_channels == 8
 
@@ -191,7 +193,25 @@ def test_decoder_residual_3():
     ]
     in_chanels = x.shape[1]
     decoder = decoding(
-        in_chanels, len(connect), True, unsample_type='conv', pool=None
+        in_chanels, len(connect), True, 'conv', crop_conn=False, pool=None
+    )
+    x, _ = cblock(x, in_chanels, in_chanels * 2, True, pool=None)
+    x = decoder(x, connect)
+    assert x.shape.numel() == decoder.out_channels * (x.shape[-1] ** 3)
+
+
+def test_decoder_crop():
+    r""" test case """
+    x = torch.empty(1, 256, 4, 4, 4)
+    connect = [
+        torch.empty(1, 32, 64, 64, 64),
+        torch.empty(1, 64, 32, 32, 32),
+        torch.empty(1, 128, 16, 16, 16),
+        torch.empty(1, 256, 8, 8, 8),
+    ]
+    in_chanels = x.shape[1]
+    decoder = decoding(
+        in_chanels, len(connect), True, 'conv', True, None
     )
     x, _ = cblock(x, in_chanels, in_chanels * 2, True, pool=None)
     x = decoder(x, connect)
