@@ -21,11 +21,14 @@ class Unet3D(nn.Module):
         num_block: int = 3,
         residual: bool = False,
         unsample_type: str = 'conv',
+        crop_conn: bool = False,
+        dropout_p: float = 0.0,
         pool="Max",
         activation: str = "ReLU",
         normolization: str = "BatchNorm3d",
     ):
         super().__init__()
+        self.dropout = nn.Dropout3d(p=dropout_p)
         self.encoder = Encoder(
             in_chanels=in_chanels,
             out_channels_first=out_channels_first,
@@ -41,6 +44,7 @@ class Unet3D(nn.Module):
             num_block=num_block,
             residual=residual,
             unsample_type=unsample_type,
+            crop_conn=crop_conn,
             pool=None,
             activation=activation,
             normolization=normolization,
@@ -60,4 +64,7 @@ class Unet3D(nn.Module):
         out, connections = self.encoder(x)
         out, _ = self.bottom(out)
         out = self.decoder(out, connections)
-        return self.final_layer(out)
+        out = self.final_layer(out)
+        if self.dropout.p > 0.0:
+            out = self.dropout(out)
+        return out
