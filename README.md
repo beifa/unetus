@@ -14,6 +14,8 @@ ToDO:
 - [X] mypy
 - [X] pypi
 - [X] residual block
-- [ ] dropout
+- [X] dropout
 - [X] ConvTranspose
-- [ ] crop connection
+- [X] crop connection
+- [ ] add doc
+- [ ] add description
